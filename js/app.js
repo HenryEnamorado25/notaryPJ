@@ -37,10 +37,10 @@ const loadBook = (fileName, displayName) => {
 
 //get the stats for the books
 const getDataStats = (fileContent) => {
-    var docLength = document.getElementById('docLength');
-    var wordCount = document.getElementById('wordCount');
+  //  var docLength = document.getElementById('docLength');
+  //  var wordCount = document.getElementById('wordCount');
     var charCount = document.getElementById('charCount');
-    console.log(docLength);
+    //console.log(docLength);
 
     let text = fileContent.toLowerCase();
     let wordArray = text.match(/\b\S+\b/g);
@@ -75,12 +75,13 @@ const getDataStats = (fileContent) => {
     var leastWords = wordList.slice(-6, wordList.lenght);
 
     //write the values of the page
-    ULTemplate(topWords, document.getElementById("mostUsed"));
-    
+    ULTemplate(topWords, document.getElementById("mostUsed")); 
     ULTemplate(leastWords, document.getElementById('leastUsed'));
+    document.getElementById('stats').innerHTML =
+        `<li>Document Length: ${text.length}</li>
+        <li>Word Count: ${wordArray.length}</li>`
 
-    docLength.innerText = "Document Length: " + text.length;
-    wordCount.innerText = "Word Count: " + wordArray.length;
+  
 
 }
 
@@ -133,4 +134,39 @@ const filterStopWords = (wordArray) => {
         }
     }
     return uncommonArr;
+}
+
+//mark the words inn the search
+
+const performMark = () => {
+    //read the keyboard
+
+    var keyword = document.getElementById('keyword').value;
+    var display = document.getElementById('fileContent');
+    var newContent = '';
+    
+
+    let spans = document.querySelectorAll('mark');
+
+    for (var i = 0; i < spans.length; i++){
+        spans[i].outerHTML = spans[i].innerHTML;
+    }
+        var re = new RegExp(keyword, "gi");
+        var replaceTag = "<mark id='markme'>$&</mark>";
+    var BookContent = display.innerHTML;
+    
+    //add the make to the book
+    newContent = BookContent.replace(re, replaceTag);
+    
+    display.innerHTML = newContent;
+    var count = document.querySelectorAll('mark').length;
+    document.getElementById('searchstat').innerHTML = "found " + count + "matches";
+
+    if (count > 0) {
+        var element = document.getElementById("markme");
+        element.scrollIntoView();
+    }
+    
+    
+
 }
